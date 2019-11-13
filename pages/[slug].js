@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { useCMS, useCMSForm } from 'react-tinacms'
+import { useCMS, useCMSForm, useWatchFormValues } from 'react-tinacms'
 
 export default function Page(props) {
   // grab the instance of the cms to access the registered git API
-  const cms = useCMS()
+  let cms = useCMS()
 
   // add a form to the CMS; store form data in `post`
-  const [post, form] = useCMSForm({
+  let [post, form] = useCMSForm({
     id: props.fileRelativePath, // needs to be unique
     label: 'Edit Post',
 
@@ -19,7 +19,7 @@ export default function Page(props) {
     fields: [
       {
         name: 'title',
-        label: 'Title',
+        label: 'TItle',
         component: 'text',
       },
     ],
@@ -29,7 +29,7 @@ export default function Page(props) {
       return cms.api.git
         .writeToDisk({
           fileRelativePath: props.fileRelativePath,
-          content: JSON.stringify({ title: data.title }),
+          content: JSON.stringify({ title: formState.values.title }),
         })
         .then(() => {
           return cms.api.git.commit({
@@ -40,6 +40,15 @@ export default function Page(props) {
     },
   })
 
+  let writeToDisk = React.useCallback(formState => {
+    cms.api.git.writeToDisk({
+      fileRelativePath: props.fileRelativePath,
+      content: JSON.stringify({ title: formState.values.title }),
+    })
+  }, [])
+
+  useWatchFormValues(form, writeToDisk)
+
   return (
     <>
       <h1>{post.title}</h1>
@@ -49,7 +58,7 @@ export default function Page(props) {
 
 Page.getInitialProps = function(ctx) {
   const { slug } = ctx.query
-  const content = require(`../posts/${slug}.json`)
+  let content = require(`../posts/${slug}.json`)
 
   return {
     slug: slug,
