@@ -14,7 +14,7 @@ class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props
     return (
-      <Tina cms={this.cms}>
+      <Tina cms={this.cms} position={"displace"}>
         <Component {...pageProps} />
       </Tina>
     )

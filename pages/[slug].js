@@ -12,7 +12,7 @@ export default function Page(props) {
 
     // starting values for the post object
     initialValues: {
-      title: props.title,
+      ...props.content,
     },
 
     // field definition
@@ -21,6 +21,13 @@ export default function Page(props) {
         name: 'title',
         label: 'TItle',
         component: 'text',
+        description: 'Enter the title of the post here'
+      },
+      {
+        name: 'text',
+        label: 'Text',
+        component: 'text',
+        description: 'Enter the text of the post here'
       },
     ],
 
@@ -29,12 +36,12 @@ export default function Page(props) {
       return cms.api.git
         .writeToDisk({
           fileRelativePath: props.fileRelativePath,
-          content: JSON.stringify({ title: formState.values.title }),
+          content: JSON.stringify(data),
         })
         .then(() => {
           return cms.api.git.commit({
             files: [props.fileRelativePath],
-            message: `Commit from Tina: Update ${data.fileRelativePath}`,
+            message: `Commit from Tina: Update ${props.fileRelativePath}`,
           })
         })
     },
@@ -43,7 +50,7 @@ export default function Page(props) {
   let writeToDisk = React.useCallback(formState => {
     cms.api.git.writeToDisk({
       fileRelativePath: props.fileRelativePath,
-      content: JSON.stringify({ title: formState.values.title }),
+      content: JSON.stringify(formState.values),
     })
   }, [])
 
@@ -52,17 +59,18 @@ export default function Page(props) {
   return (
     <>
       <h1>{post.title}</h1>
+      <span>{post.text}</span>
     </>
   )
 }
 
-Page.getInitialProps = function(ctx) {
+Page.getInitialProps = function (ctx) {
   const { slug } = ctx.query
   let content = require(`../posts/${slug}.json`)
 
   return {
     slug: slug,
     fileRelativePath: `/posts/${slug}.json`,
-    title: content.title,
+    content,
   }
 }
