@@ -8,15 +8,15 @@
     "start": "next start"
   },
   "dependencies": {
-    "@tinacms/api-git": "^0.4.3",
-    "@tinacms/git-client": "^0.4.0",
+    "@tinacms/api-git": "^0.4.5",
+    "@tinacms/git-client": "^0.4.1",
     "concurrently": "^5.0.0",
     "moment": "^2.24.0",
-    "next": "9.1.3",
+    "next": "^9.1.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-tinacms": "^0.8.1",
+    "react-tinacms": "^0.9.1",
     "styled-components": "^4.4.1",
-    "tinacms": "^0.8.1"
+    "tinacms": "^0.9.1"
   }
 }
